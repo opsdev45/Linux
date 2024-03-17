@@ -13,5 +13,8 @@ RUN apk --no-cache add dcron
 # Give execute permission to the Bash script
 RUN chmod +x log_err.sh
 
-# Run cron in the foreground with the crontab entry to execute the script every minute
-CMD ["crond", "-f", "-d", "8", "-l", "8", "-L", "/dev/stdout", "&&", "echo", "* * * * * /bin/sh /app/your_script.sh >/dev/null 2>&1", ">>", "/etc/crontabs/root"]
+# Add the cron job
+RUN echo "* * * * * /bin/sh /app/log_err.sh >/dev/null 2>&1" >> /etc/crontabs/root
+
+# Run cron in the foreground
+CMD ["crond", "-f", "-d", "8", "-l", "8", "-L", "/dev/stdout"]
